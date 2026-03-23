@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+target_dir="${STOW_TARGET:-$HOME}"
+
+exec stow --dir "$repo_dir" --target "$target_dir" "$@"
