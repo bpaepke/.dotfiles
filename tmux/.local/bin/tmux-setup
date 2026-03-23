@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v tmux >/dev/null 2>&1; then
+  echo "tmux not found in PATH" >&2
+  exit 1
+fi
+
+plugins_dir="${TMUX_PLUGIN_MANAGER_PATH:-$HOME/.tmux/plugins}"
+tpm_dir="$plugins_dir/tpm"
+
+if ! command -v git >/dev/null 2>&1; then
+  echo "git not found in PATH (needed to install TPM)" >&2
+  exit 1
+fi
+
+mkdir -p "$plugins_dir"
+
+if [[ ! -d "$tpm_dir/.git" ]]; then
+  echo "Cloning TPM into: $tpm_dir"
+  git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir"
+else
+  echo "TPM already present: $tpm_dir"
+fi
+
+echo "Installing tmux plugins (reads ~/.config/tmux/tmux.conf)"
+"$tpm_dir/bin/install_plugins"
+
+echo "Done."
+
